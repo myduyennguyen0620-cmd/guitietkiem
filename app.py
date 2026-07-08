@@ -4,28 +4,50 @@ import matplotlib.pyplot as plt
 # --- 1. CẤU HÌNH GIAO DIỆN TRANG WEB ---
 st.set_page_config(page_title="Kế Hoạch Tiết Kiệm", page_icon="💰", layout="centered")
 
-# --- CHÈN HÌNH NỀN ---
+# --- CHÈN HÌNH NỀN & HIỆU ỨNG KÍNH MỜ (GLASSMORPHISM) ---
 page_bg_img = """
 <style>
+/* 1. Đổi nền thành màu Gradient sáng, thanh lịch */
 [data-testid="stAppViewContainer"] {
-background-image: url("https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2029&auto=format&fit=crop");
-background-size: cover;
-background-position: center;
-background-attachment: fixed;
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
+
+/* 2. Làm trong suốt thanh header mặc định */
 [data-testid="stHeader"] {
-background: rgba(0,0,0,0);
+    background: rgba(0,0,0,0);
 }
-/* Làm mờ nhẹ nền của các chữ để dễ đọc trên nền ảnh */
+
+/* 3. XÓA VIỀN THÔ & làm trong suốt các ô nhập liệu */
+div[data-baseweb="input"] > div {
+    background-color: rgba(255, 255, 255, 0.4) !important; /* Nền trắng hơi trong suốt */
+    border: none !important; /* XÓA BỎ VIỀN */
+    border-radius: 10px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Thêm bóng đổ nhẹ cho có chiều sâu */
+}
+
+/* 4. Chỉnh lại các khối chữ, báo cáo cho mờ ảo như tấm kính */
 .stMarkdown, .stText, .stMetric {
-    background-color: rgba(255, 255, 255, 0.85);
-    padding: 10px;
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(10px); /* HIỆU ỨNG KÍNH MỜ */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important; /* Viền trắng siêu mỏng tạo độ bóng */
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+}
+
+/* Tùy chỉnh màu chữ các con số kết quả (Metric) cho nổi bật */
+[data-testid="stMetricValue"] {
+    color: #1f77b4 !important;
+    font-weight: bold;
 }
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
-# ---------------------
+# ---------------------------------------------------------
 
 st.title("💰 Ứng Dụng Tính Toán Tiền Gửi Tiết Kiệm")
 st.markdown("Giải pháp tài chính minh bạch, trực quan dựa trên sức mạnh của Lãi Kép.")
