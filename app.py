@@ -63,8 +63,6 @@ st.markdown("### 📝 Nhập Thông Số Kế Hoạch")
 
 # --- KHỐI NHẬP LIỆU GIAO DIỆN MỚI (CÓ SAO ĐỎ) ---
 
-st.markdown("### 📝 Nhập Thông Số Kế Hoạch")
-
 col1, col2 = st.columns(2)
 with col1:
     LSN_chuoi = st.text_input("Nhập lãi suất 1 năm (%, tối đa 2 số thập phân) :red[*] :", value="6.5").replace(",", ".")
