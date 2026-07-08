@@ -61,26 +61,34 @@ Chon = 1 if "1:" in chon_chuoi else 2
 
 st.markdown("### 📝 Nhập Thông Số Kế Hoạch")
 
-# Dùng st.columns để chia thành 2 cột cho đẹp mắt
+# --- KHỐI NHẬP LIỆU GIAO DIỆN MỚI (CÓ SAO ĐỎ) ---
+
+st.markdown("### 📝 Nhập Thông Số Kế Hoạch")
+
 col1, col2 = st.columns(2)
 with col1:
-    LSN_chuoi = st.text_input("Nhập lãi suất 1 năm (%, tối đa 2 số thập phân):", value="6.5").replace(",", ".")
+    LSN_chuoi = st.text_input("Nhập lãi suất 1 năm (%, tối đa 2 số thập phân) :red[*] :", value="6.5").replace(",", ".")
 with col2:
-    SN_chuoi = st.text_input("Nhập thời gian gửi (năm, tối đa 1 số thập phân):", value="5").replace(",", ".")
+    SN_chuoi = st.text_input("Nhập thời gian gửi (năm, tối đa 1 số thập phân) :red[*] :", value="5").replace(",", ".")
 
-# Các biến lưu tạm cho phần giao diện mở rộng
 C_chuoi, PV_chuoi, LP_chuoi, FV_chuoi = "", "", "", ""
 
 if Chon == 1:
     col3, col4, col5 = st.columns(3)
     with col3:
-        C_chuoi = st.text_input("Tiền gửi mỗi tháng (triệu VNĐ):", value="5").replace(",", ".")
+        C_chuoi = st.text_input("Tiền gửi mỗi tháng (triệu VNĐ, tối đa 2 số thập phân) :red[*] :", value="5").replace(",", ".")
     with col4:
-        PV_chuoi = st.text_input("Vốn sẵn có (ENTER để trống = 0):", value="").replace(",", ".")
+        # Ô tùy chọn: Xóa chữ "ENTER...", không có sao đỏ
+        PV_chuoi = st.text_input("Vốn sẵn có (triệu VNĐ):", value="").replace(",", ".")
     with col5:
-        LP_chuoi = st.text_input("Lạm phát dự kiến % (ENTER để trống = 0):", value="4.2").replace(",", ".")
+        # Ô tùy chọn: Xóa chữ "ENTER...", không có sao đỏ
+        LP_chuoi = st.text_input("Lạm phát dự kiến (%):", value="4.2").replace(",", ".")
+        
 elif Chon == 2:
-    FV_chuoi = st.text_input("Nhập tổng mục tiêu muốn có (triệu VNĐ):", value="500").replace(",", ".")
+    # Bổ sung đúng chuẩn câu chữ bà yêu cầu
+    FV_chuoi = st.text_input("Nhập tổng mục tiêu muốn có (triệu VNĐ, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
+
+# ------------------------------------------------
 
 # --- 3. NÚT THỰC THI & XỬ LÝ LOGIC ---
 if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="primary"):
