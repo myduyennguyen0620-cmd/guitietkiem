@@ -74,17 +74,17 @@ C_chuoi, PV_chuoi, LP_chuoi, FV_chuoi = "", "", "", ""
 if Chon == 1:
     col3, col4, col5 = st.columns(3)
     with col3:
-        C_chuoi = st.text_input("Tiền gửi mỗi tháng (triệu VNĐ, tối đa 2 số thập phân) :red[*] :", value="5").replace(",", ".")
+        C_chuoi = st.text_input("Tiền gửi mỗi tháng (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="5").replace(",", ".")
     with col4:
         # Ô tùy chọn: Xóa chữ "ENTER...", không có sao đỏ
-        PV_chuoi = st.text_input("Vốn sẵn có (triệu VNĐ):", value="").replace(",", ".")
+        PV_chuoi = st.text_input("Vốn sẵn có (triệu đồng, tối đa 2 số thập phân):", value="").replace(",", ".")
     with col5:
         # Ô tùy chọn: Xóa chữ "ENTER...", không có sao đỏ
-        LP_chuoi = st.text_input("Lạm phát dự kiến (%):", value="4.2").replace(",", ".")
+        LP_chuoi = st.text_input("Lạm phát dự kiến (%, tối đa 2 số thập phân):", value="4.2").replace(",", ".")
         
 elif Chon == 2:
     # Bổ sung đúng chuẩn câu chữ bà yêu cầu
-    FV_chuoi = st.text_input("Nhập tổng mục tiêu muốn có (triệu VNĐ, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
+    FV_chuoi = st.text_input("Nhập tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
 
 # ------------------------------------------------
 
@@ -118,7 +118,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- TÍNH TOÁN OPTION 1 ---
     if Chon == 1:
         if C_chuoi == "":
-            st.error("LỖI: Vui lòng nhập số tiền gửi mỗi tháng!")
+            st.error("LỖI: Cần nhập số tiền gửi mỗi tháng")
             st.stop()
         if "." in C_chuoi and len(C_chuoi.split(".")[1]) > 2:
             st.error("LỖI: Số tiền gửi chỉ nhập tối đa 2 số thập phân")
