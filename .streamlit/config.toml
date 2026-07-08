@@ -1,0 +1,15 @@
+[theme]
+# Màu của chữ và các nút khi bấm vào (Màu xanh dương đậm chuyên nghiệp)
+primaryColor = "#1f77b4"
+
+# Màu nền của toàn bộ trang web (Màu xám nhạt/trắng ngà cho dễ nhìn)
+backgroundColor = "#f8f9fa"
+
+# Màu nền của các thanh trượt, ô nhập liệu (Màu trắng tinh)
+secondaryBackgroundColor = "#ffffff"
+
+# Màu của chữ viết (Màu xám đen than chì để dễ đọc)
+textColor = "#2c3e50"
+
+# Đổi font chữ (sans serif nhìn hiện đại)
+font = "sans serif"
