@@ -68,9 +68,9 @@ st.markdown("### 📝 Nhập Thông Số Kế Hoạch")
 
 col1, col2 = st.columns(2)
 with col1:
-    LSN_chuoi = st.text_input("Nhập lãi suất 1 năm (%, tối đa 2 số thập phân) :red[*] :", value="6.5").replace(",", ".")
+    LSN_chuoi = st.text_input("Lãi suất một năm (%, tối đa 2 số thập phân) :red[*] :", value="6.5").replace(",", ".")
 with col2:
-    SN_chuoi = st.text_input("Nhập thời gian gửi (năm, tối đa 1 số thập phân) :red[*] :", value="5").replace(",", ".")
+    SN_chuoi = st.text_input("Thời gian gửi tiền (năm, tối đa 1 số thập phân) :red[*] :", value="5").replace(",", ".")
 
 C_chuoi, PV_chuoi, LP_chuoi, FV_chuoi = "", "", "", ""
 
@@ -87,7 +87,7 @@ if Chon == 1:
         
 elif Chon == 2:
     # Bổ sung đúng chuẩn câu chữ bà yêu cầu
-    FV_chuoi = st.text_input("Nhập tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
+    FV_chuoi = st.text_input("Tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
 
 # ------------------------------------------------
 
@@ -97,7 +97,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     
     # KHI BẤM NÚT, HỆ THỐNG SẼ CHẠY BỘ LỌC BẮT LỖI
     if LSN_chuoi == "" or SN_chuoi == "":
-        st.error("LỖI: Vui lòng nhập đầy đủ Lãi suất và Thời gian!")
+        st.error("LỖI: Cần nhập đầy đủ Lãi suất và Thời gian")
         st.stop() # Lệnh này thay thế cho sys.exit() trong Streamlit
         
     if "." in LSN_chuoi and len(LSN_chuoi.split(".")[1]) > 2:
@@ -106,7 +106,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     LSN = float(LSN_chuoi)
 
     if "." in SN_chuoi and len(SN_chuoi.split(".")[1]) > 1:
-        st.error("LỖI: Thời gian gửi chỉ nhập tối đa 1 số thập phân")
+        st.error("LỖI: Thời gian gửi tiền chỉ nhập tối đa 1 số thập phân")
         st.stop()
     SN = float(SN_chuoi)
 
@@ -208,7 +208,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- 4. RENDER BIỂU ĐỒ LÊN WEB ---
     if len(danh_sach_nam) > 0:
 
-        st.subheader("📈 LỊCH TRÌNH TĂNG TRƯỞNG TÀI SẢN")
+        st.subheader("📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
         
         # Khởi tạo khung vẽ matplotlib
         fig, ax = plt.subplots(figsize=(10, 4.5))
