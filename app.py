@@ -7,6 +7,11 @@ st.set_page_config(page_title="Kế Hoạch Tiết Kiệm", page_icon="💰", la
 # --- CHÈN HÌNH NỀN & HIỆU ỨNG KÍNH MỜ (GLASSMORPHISM) ---
 page_bg_img = """
 <style>
+/* ĐÂY LÀ DÒNG LỆNH MỚI: Bắt cái hộp chứa code CSS phải tàng hình */
+.stMarkdown:has(style) {
+    display: none !important;
+}
+
 /* 1. Đổi nền thành màu Gradient sáng, thanh lịch */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
@@ -22,18 +27,18 @@ page_bg_img = """
 
 /* 3. XÓA VIỀN THÔ & làm trong suốt các ô nhập liệu */
 div[data-baseweb="input"] > div {
-    background-color: rgba(255, 255, 255, 0.4) !important; /* Nền trắng hơi trong suốt */
-    border: none !important; /* XÓA BỎ VIỀN */
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    border: none !important;
     border-radius: 10px !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Thêm bóng đổ nhẹ cho có chiều sâu */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 /* 4. Chỉnh lại các khối chữ, báo cáo cho mờ ảo như tấm kính */
 .stMarkdown, .stText, .stMetric {
     background-color: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(10px); /* HIỆU ỨNG KÍNH MỜ */
+    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.5) !important; /* Viền trắng siêu mỏng tạo độ bóng */
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
     border-radius: 15px;
     padding: 15px;
     box-shadow: 0 8px 15px rgba(0,0,0,0.05);
@@ -48,9 +53,7 @@ div[data-baseweb="input"] > div {
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 # ---------------------------------------------------------
-
 st.title("💰 Ứng Dụng Tính Toán Tiền Gửi Tiết Kiệm")
-st.markdown("Giải pháp tài chính minh bạch, trực quan dựa trên sức mạnh của Lãi Kép.")
 
 # --- 2. MENU LỰA CHỌN TÍNH NĂNG ---
 chon_chuoi = st.radio(
