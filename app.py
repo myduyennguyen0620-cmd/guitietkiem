@@ -4,6 +4,29 @@ import matplotlib.pyplot as plt
 # --- 1. CẤU HÌNH GIAO DIỆN TRANG WEB ---
 st.set_page_config(page_title="Kế Hoạch Tiết Kiệm", page_icon="💰", layout="centered")
 
+# --- CHÈN HÌNH NỀN ---
+page_bg_img = """
+<style>
+[data-testid="stAppViewContainer"] {
+background-image: url("https://images.unsplash.com/photo-1557682250-33bd709cbe85?q=80&w=2029&auto=format&fit=crop");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+}
+[data-testid="stHeader"] {
+background: rgba(0,0,0,0);
+}
+/* Làm mờ nhẹ nền của các chữ để dễ đọc trên nền ảnh */
+.stMarkdown, .stText, .stMetric {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 10px;
+    border-radius: 10px;
+}
+</style>
+"""
+st.markdown(page_bg_img, unsafe_allow_html=True)
+# ---------------------
+
 st.title("💰 Ứng Dụng Tính Toán Tiền Gửi Tiết Kiệm")
 st.markdown("Giải pháp tài chính minh bạch, trực quan dựa trên sức mạnh của Lãi Kép.")
 st.markdown("---")
@@ -40,6 +63,7 @@ elif Chon == 2:
 
 # --- 3. NÚT THỰC THI & XỬ LÝ LOGIC ---
 if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="primary"):
+    st.balloons()
     
     # KHI BẤM NÚT, HỆ THỐNG SẼ CHẠY BỘ LỌC BẮT LỖI
     if LSN_chuoi == "" or SN_chuoi == "":
