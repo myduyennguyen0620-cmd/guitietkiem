@@ -29,7 +29,6 @@ st.markdown(page_bg_img, unsafe_allow_html=True)
 
 st.title("💰 Ứng Dụng Tính Toán Tiền Gửi Tiết Kiệm")
 st.markdown("Giải pháp tài chính minh bạch, trực quan dựa trên sức mạnh của Lãi Kép.")
-st.markdown("---")
 
 # --- 2. MENU LỰA CHỌN TÍNH NĂNG ---
 chon_chuoi = st.radio(
