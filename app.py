@@ -149,7 +149,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         TienLai = FV - TongGoc
         Suc_mua_thuc_te = FV / ((1 + (LP/100))**SN)
         
-        st.markdown("---")
         st.subheader("📊 BÁO CÁO KẾT QUẢ")
         
         # Dùng st.metric để tạo các khối thông số cực kỳ xịn xò
@@ -187,7 +186,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         TongGoc = C * n
         TienLai = FV - TongGoc
         
-        st.markdown("---")
         st.subheader("📊 BÁO CÁO KẾT QUẢ")
         
         m1, m2, m3 = st.columns(3)
@@ -209,7 +207,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
 
     # --- 4. RENDER BIỂU ĐỒ LÊN WEB ---
     if len(danh_sach_nam) > 0:
-        st.markdown("<br>", unsafe_allow_html=True)
+
         st.subheader("📈 LỊCH TRÌNH TĂNG TRƯỞNG TÀI SẢN")
         
         # Khởi tạo khung vẽ matplotlib
