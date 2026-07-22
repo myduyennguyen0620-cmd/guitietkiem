@@ -1,6 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-import pandas as pd # Đã thêm thư viện pandas để làm bảng số liệu và xuất Excel
+import pandas as pd
 
 # --- 1. CẤU HÌNH GIAO DIỆN TRANG WEB ---
 st.set_page_config(page_title="Kế Hoạch Tiết Kiệm", page_icon="💰", layout="centered")
@@ -79,34 +79,61 @@ if Chon == 1:
 elif Chon == 2:
     FV_chuoi = st.text_input("Tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
 
-# --- 3. NÚT THỰC THI & XỬ LÝ LOGIC ---
+# --- 3. NÚT THỰC THI & XỬ LÝ LOGIC (CÓ BỘ LỌC LỖI TẤT CẢ CÁC Ô) ---
 if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="primary"):
     st.snow()
     
+    # --- BỘ LỌC LỖI CHUNG ---
     if LSN_chuoi == "" or SN_chuoi == "":
         st.error("LỖI: Cần nhập đầy đủ Lãi suất và Thời gian")
         st.stop()
         
+    if "." in LSN_chuoi and len(LSN_chuoi.split(".")[1]) > 2:
+        st.error("LỖI: Lãi suất chỉ nhập tối đa 2 số thập phân")
+        st.stop()
     LSN = float(LSN_chuoi)
+
+    if "." in SN_chuoi and len(SN_chuoi.split(".")[1]) > 1:
+        st.error("LỖI: Thời gian gửi tiền chỉ nhập tối đa 1 số thập phân")
+        st.stop()
     SN = float(SN_chuoi)
 
     r = (LSN / 100) / 12
     n = int(SN * 12)
 
-    # Khởi tạo giỏ đựng số liệu chuyên sâu hơn
     danh_sach_nam = []
     danh_sach_goc = []
     danh_sach_lai = []
     danh_sach_tien = []
 
-    # --- TÍNH TOÁN OPTION 1 ---
+    # --- BỘ LỌC LỖI & TÍNH TOÁN OPTION 1 ---
     if Chon == 1:
+        # Bắt lỗi Tiền gửi mỗi tháng
         if C_chuoi == "":
             st.error("LỖI: Cần nhập số tiền gửi mỗi tháng")
             st.stop()
+        if "." in C_chuoi and len(C_chuoi.split(".")[1]) > 2:
+            st.error("LỖI: Số tiền gửi mỗi tháng chỉ nhập tối đa 2 số thập phân")
+            st.stop()
         C = float(C_chuoi)
-        PV = float(PV_chuoi) if PV_chuoi != "" else 0.0
-        LP = float(LP_chuoi) if LP_chuoi != "" else 0.0
+
+        # Bắt lỗi Vốn sẵn có
+        if PV_chuoi != "":
+            if "." in PV_chuoi and len(PV_chuoi.split(".")[1]) > 2:
+                st.error("LỖI: Vốn sẵn có chỉ nhập tối đa 2 số thập phân")
+                st.stop()
+            PV = float(PV_chuoi)
+        else:
+            PV = 0.0
+
+        # Bắt lỗi Lạm phát dự kiến
+        if LP_chuoi != "":
+            if "." in LP_chuoi and len(LP_chuoi.split(".")[1]) > 2:
+                st.error("LỖI: Lạm phát dự kiến chỉ nhập tối đa 2 số thập phân")
+                st.stop()
+            LP = float(LP_chuoi)
+        else:
+            LP = 0.0
 
         FV = (PV * ((1 + r)**n)) + (C * (((1 + r)**n - 1) / r))
         TongGoc = PV + (C * n)
@@ -140,10 +167,14 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             danh_sach_lai.append(TienLai)
             danh_sach_tien.append(FV)
             
-    # --- TÍNH TOÁN OPTION 2 ---
+    # --- BỘ LỌC LỖI & TÍNH TOÁN OPTION 2 ---
     elif Chon == 2:
+        # Bắt lỗi Tổng mục tiêu muốn có
         if FV_chuoi == "":
-            st.error("LỖI: Cần nhập số tiền mục tiêu mong muốn")
+            st.error("LỖI: Vui lòng nhập số tiền mục tiêu mong muốn!")
+            st.stop()
+        if "." in FV_chuoi and len(FV_chuoi.split(".")[1]) > 2:
+            st.error("LỖI: Tổng mục tiêu muốn có chỉ nhập tối đa 2 số thập phân")
             st.stop()
         FV = float(FV_chuoi)
 
@@ -178,18 +209,15 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- 4. RENDER GIAO DIỆN PHÂN TÍCH (ĐỒ THỊ & BẢNG) ---
     if len(danh_sach_nam) > 0:
         
-        # Chia cột để vẽ 2 biểu đồ cạnh nhau
         col_chart1, col_chart2 = st.columns([2, 1])
         
         with col_chart1:
-            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN (CỘT CHỒNG)")
+            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
             fig1, ax1 = plt.subplots(figsize=(8, 5))
             
-            # Vẽ cột gốc và lãi chồng lên nhau
             ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
             ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
             
-            # Làm đẹp
             ax1.spines['top'].set_visible(False)
             ax1.spines['right'].set_visible(False)
             ax1.set_ylabel('Triệu đồng', fontsize=11, color='#666666')
@@ -201,21 +229,18 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.markdown("### 🥧 CƠ CẤU TÀI SẢN")
             fig2, ax2 = plt.subplots(figsize=(5, 5))
             
-            # Vẽ biểu đồ tròn cho năm cuối cùng
             labels = ['Tổng vốn', 'Tiền lãi']
             sizes = [TongGoc, TienLai]
             colors = ['#4CAF50', '#FF9800']
-            explode = (0, 0.05) # Làm nổi bật phần lãi
+            explode = (0, 0.05)
             
             ax2.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
                     shadow=True, startangle=90, textprops={'fontsize': 12, 'weight': 'bold'})
             ax2.axis('equal') 
             st.pyplot(fig2)
 
-        # Bảng dữ liệu chi tiết và nút tải Excel
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
-        # Gom số liệu vào Pandas DataFrame
         df = pd.DataFrame({
             "Thời gian": danh_sach_nam,
             "Tổng vốn (Tr)": [round(x, 2) for x in danh_sach_goc],
@@ -223,11 +248,9 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             "Tổng tài sản (Tr)": [round(x, 2) for x in danh_sach_tien]
         })
         
-        # Hiển thị bảng
         st.dataframe(df, use_container_width=True)
         
-        # Nút xuất ra file CSV (Excel)
-        csv = df.to_csv(index=False).encode('utf-8-sig') # Dùng utf-8-sig để Excel đọc không bị lỗi font tiếng Việt
+        csv = df.to_csv(index=False).encode('utf-8-sig')
         st.download_button(
             label="📥 Tải Báo Cáo Xuống (Mở bằng Excel)",
             data=csv,
