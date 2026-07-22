@@ -79,9 +79,10 @@ if Chon == 1:
 elif Chon == 2:
     FV_chuoi = st.text_input("Tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
 
-# --- 3. NÚT THỰC THI & XỬ LÝ LOGIC (CÓ BỘ LỌC LỖI TẤT CẢ CÁC Ô) ---
+# --- 3. NÚT THỰC THI & XỬ LÝ LOGIC ---
 if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="primary"):
-    st.snow()
+    # Đã sửa thành bóng bay theo yêu cầu
+    st.balloons()
     
     # --- BỘ LỌC LỖI CHUNG ---
     if LSN_chuoi == "" or SN_chuoi == "":
@@ -106,9 +107,8 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     danh_sach_lai = []
     danh_sach_tien = []
 
-    # --- BỘ LỌC LỖI & TÍNH TOÁN OPTION 1 ---
+    # --- TÍNH TOÁN OPTION 1 ---
     if Chon == 1:
-        # Bắt lỗi Tiền gửi mỗi tháng
         if C_chuoi == "":
             st.error("LỖI: Cần nhập số tiền gửi mỗi tháng")
             st.stop()
@@ -117,7 +117,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.stop()
         C = float(C_chuoi)
 
-        # Bắt lỗi Vốn sẵn có
         if PV_chuoi != "":
             if "." in PV_chuoi and len(PV_chuoi.split(".")[1]) > 2:
                 st.error("LỖI: Vốn sẵn có chỉ nhập tối đa 2 số thập phân")
@@ -126,7 +125,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         else:
             PV = 0.0
 
-        # Bắt lỗi Lạm phát dự kiến
         if LP_chuoi != "":
             if "." in LP_chuoi and len(LP_chuoi.split(".")[1]) > 2:
                 st.error("LỖI: Lạm phát dự kiến chỉ nhập tối đa 2 số thập phân")
@@ -167,9 +165,8 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             danh_sach_lai.append(TienLai)
             danh_sach_tien.append(FV)
             
-    # --- BỘ LỌC LỖI & TÍNH TOÁN OPTION 2 ---
+    # --- TÍNH TOÁN OPTION 2 ---
     elif Chon == 2:
-        # Bắt lỗi Tổng mục tiêu muốn có
         if FV_chuoi == "":
             st.error("LỖI: Vui lòng nhập số tiền mục tiêu mong muốn!")
             st.stop()
@@ -212,17 +209,36 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         col_chart1, col_chart2 = st.columns([2, 1])
         
         with col_chart1:
-            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
+            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN (CỘT CHỒNG)")
             fig1, ax1 = plt.subplots(figsize=(8, 5))
             
-            ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
-            ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
+            # Vẽ cột gốc và lãi
+            bars_goc = ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
+            bars_lai = ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
+            
+            # Cập nhật hiển thị số liệu lên cột
+            for bar_g, bar_l in zip(bars_goc, bars_lai):
+                h_goc = bar_g.get_height()
+                h_lai = bar_l.get_height()
+                x_pos = bar_g.get_x() + bar_g.get_width() / 2
+                
+                # In số Tiền gốc (giữa cột xanh)
+                if h_goc > 0:
+                    ax1.text(x_pos, h_goc / 2, f'{h_goc:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
+                
+                # In số Tiền lãi (giữa cột cam)
+                if h_lai > 0:
+                    ax1.text(x_pos, h_goc + h_lai / 2, f'{h_lai:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
+                
+                # In Tổng tài sản (trên đỉnh cột)
+                ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
             
             ax1.spines['top'].set_visible(False)
             ax1.spines['right'].set_visible(False)
             ax1.set_ylabel('Triệu đồng', fontsize=11, color='#666666')
             ax1.grid(axis='y', linestyle='--', alpha=0.4)
-            ax1.legend()
+            # Di chuyển ghi chú (legend) ra góc trên bên trái cho đỡ che đồ thị
+            ax1.legend(loc='upper left')
             st.pyplot(fig1)
             
         with col_chart2:
@@ -250,7 +266,8 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         st.dataframe(df, use_container_width=True)
         
-        csv = df.to_csv(index=False).encode('utf-8-sig')
+        # Đã thêm sep=';' để Excel chia cột tự động theo chuẩn máy tính Việt Nam
+        csv = df.to_csv(index=False, sep=';').encode('utf-8-sig')
         st.download_button(
             label="📥 Tải Báo Cáo Xuống (Mở bằng Excel)",
             data=csv,
