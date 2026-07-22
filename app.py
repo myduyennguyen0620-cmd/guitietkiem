@@ -209,7 +209,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         col_chart1, col_chart2 = st.columns([2, 1])
         
         with col_chart1:
-            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN (CỘT CHỒNG)")
+            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
             fig1, ax1 = plt.subplots(figsize=(8, 5))
             
             # Vẽ cột gốc và lãi
