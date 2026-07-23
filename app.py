@@ -39,8 +39,8 @@ div[data-baseweb="input"] > div {
     color: #1f77b4 !important;
     font-weight: bold;
 }
-/* KHUNG CARD CHUẨN ĐỒNG BỘ CHO CẢ 2 BÊN */
-.card-box {
+/* ĐỒNG BỘ CHIỀU CAO TUYỆT ĐỐI CHO CẢ 2 BÊN */
+.nhan-dinh-card {
     background-color: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -48,7 +48,7 @@ div[data-baseweb="input"] > div {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-    height: 100%;
+    height: 290px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -227,8 +227,8 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         st.markdown("<br>", unsafe_allow_html=True) 
         
-        # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH CÂN XỨNG TUYỆT ĐỐI) ---
-        col_pie, col_text = st.columns(2) 
+        # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH) ---
+        col_pie, col_text = st.columns([1, 1.2]) 
         
         nam_hien_thi = int(SN) if SN == int(SN) else SN
         ty_le_lai = (TienLai / FV) * 100
@@ -242,59 +242,56 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             loi_khuyen = "Thời gian là đòn bẩy vĩ đại nhất! Kỷ luật xuyên suốt sẽ giúp bạn chiến thắng mọi biến động của thị trường."
             
         if ty_le_lai >= 50:
-            nhan_xet_lai = "Tiền lãi đã vượt mốc 50% tổng tài sản! Đây chính là đỉnh cao của việc 'để tiền đẻ ra tiền'."
+            nhan_xet_lai = "Tiền lãi đã vượt mốc 50% tổng tài sản! Đây chính là đỉnh cao của việc 'de tiền đẻ ra tiền'."
         else:
             nhan_xet_lai = "Dòng tiền của bạn đang hoạt động sinh lời rất ổn định và an toàn."
 
         with col_pie:
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*Tỷ lệ % sau {nam_hien_thi} năm*")
             
-            # Bọc biểu đồ tròn trong khung card-box để tạo khối hộp kính mờ đồng bộ bên trái
-            with st.container():
-                st.markdown("<div class='card-box'>", unsafe_allow_html=True)
-                fig2 = go.Figure(data=[go.Pie(
-                    labels=['Tổng vốn', 'Tiền lãi'],
-                    values=[TongGoc, TienLai],
-                    marker=dict(colors=['#4CAF50', '#FF9800']),
-                    textinfo='label+percent',
-                    textposition='inside',
-                    textfont=dict(size=13, color='white', family="Arial Black"),
-                    hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
-                )])
-                
-                fig2.update_layout(
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    showlegend=False,
-                    margin=dict(t=10, b=10, l=10, r=10),
-                    height=240 
-                )
-                st.plotly_chart(fig2, use_container_width=True, config={'displayModeBar': False})
-                st.markdown("</div>", unsafe_allow_html=True)
+            fig2 = go.Figure(data=[go.Pie(
+                labels=['Tổng vốn', 'Tiền lãi'],
+                values=[TongGoc, TienLai],
+                marker=dict(colors=['#4CAF50', '#FF9800']),
+                textinfo='label+percent',
+                textposition='inside',
+                textfont=dict(size=13, color='white', family="Arial Black"),
+                hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
+            )])
+            
+            # GIẢM CHIỀU CAO XUỐNG 270 ĐỂ CÂN BẰNG HOÀN HẢO
+            fig2.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False,
+                margin=dict(t=10, b=10, l=0, r=0),
+                height=270 
+            )
+            st.plotly_chart(fig2, use_container_width=True)
             
         with col_text:
             st.markdown("### 💡 NHẬN ĐỊNH TÀI CHÍNH")
             
             if Chon == 1:
-                noi_dung_nhan_dinh = f"""
-                <b>1. Tổng kết thành quả:</b> Sau {nam_hien_thi} năm, bạn sẽ tích lũy được <b>{FV:,.2f} Triệu đồng</b>.<br><br>
-                <b>2. Hiệu suất đầu tư:</b> Tiền lãi sinh ra chiếm <b>{ty_le_lai:.1f}%</b>. {nhan_xet_lai}<br><br>
-                <b>3. Lời khuyên hành vi:</b> {loi_khuyen}
-                """
-            elif Chon == 2:
-                noi_dung_nhan_dinh = f"""
-                <b>1. Tính khả thi:</b> Để đạt mục tiêu <b>{FV:,.2f} Triệu đồng</b>, kỷ luật gửi <b>{C:,.2f} Tr/tháng</b> là chìa khóa then chốt.<br><br>
-                <b>2. Đòn bẩy tài chính:</b> Bạn thực chất chỉ bỏ ra <b>{ty_le_goc:.1f}%</b> công sức (tiền gốc). {nhan_xet_lai}<br><br>
-                <b>3. Lời khuyên hành vi:</b> {loi_khuyen}
-                """
-
-            st.markdown(f"""
-            <div class='card-box'>
-                <div class='nhan-dinh-text'>
-                    {noi_dung_nhan_dinh}
+                st.markdown(f"""
+                <div class='nhan-dinh-card'>
+                    <div class='nhan-dinh-text'>
+                        <b>1. Tổng kết thành quả:</b> Sau {nam_hien_thi} năm, bạn sẽ tích lũy được <b>{FV:,.2f} Triệu đồng</b>.<br><br>
+                        <b>2. Hiệu suất đầu tư:</b> Tiền lãi sinh ra chiếm <b>{ty_le_lai:.1f}%</b>. {nhan_xet_lai}<br><br>
+                        <b>3. Lời khuyên hành vi:</b> {loi_khuyen}
+                    </div>
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+            elif Chon == 2:
+                st.markdown(f"""
+                <div class='nhan-dinh-card'>
+                    <div class='nhan-dinh-text'>
+                        <b>1. Tính khả thi:</b> Để đạt mục tiêu <b>{FV:,.2f} Triệu đồng</b>, kỷ luật gửi <b>{C:,.2f} Tr/tháng</b> là chìa khóa then chốt.<br><br>
+                        <b>2. Đòn bẩy tài chính:</b> Bạn thực chất chỉ bỏ ra <b>{ty_le_goc:.1f}%</b> công sức (tiền gốc). {nhan_xet_lai}<br><br>
+                        <b>3. Lời khuyên hành vi:</b> {loi_khuyen}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
         
