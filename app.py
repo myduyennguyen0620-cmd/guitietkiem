@@ -61,27 +61,26 @@ st.markdown("### 📝 Nhập Thông Số Kế Hoạch")
 
 col1, col2 = st.columns(2)
 with col1:
-    LSN_chuoi = st.text_input("Lãi suất một năm (%, tối đa 2 số thập phân) :red[*] :", value="6.5").replace(",", ".")
+    LSN_chuoi = st.text_input("Lãi suất một năm (%, tối đa 2 số thập phân) :red[*] :", value="", placeholder="VD: 6.5").replace(",", ".")
 with col2:
-    SN_chuoi = st.text_input("Thời gian gửi tiền (năm, tối đa 1 số thập phân) :red[*] :", value="5").replace(",", ".")
+    SN_chuoi = st.text_input("Thời gian gửi tiền (năm, tối đa 1 số thập phân) :red[*] :", value="", placeholder="VD: 5").replace(",", ".")
 
 C_chuoi, PV_chuoi, LP_chuoi, FV_chuoi = "", "", "", ""
 
 if Chon == 1:
     col3, col4, col5 = st.columns(3)
     with col3:
-        C_chuoi = st.text_input("Tiền gửi mỗi tháng (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="5").replace(",", ".")
+        C_chuoi = st.text_input("Tiền gửi mỗi tháng (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="", placeholder="VD: 5").replace(",", ".")
     with col4:
-        PV_chuoi = st.text_input("Vốn sẵn có (triệu đồng, tối đa 2 số thập phân):", value="").replace(",", ".")
+        PV_chuoi = st.text_input("Vốn sẵn có (triệu đồng, tối đa 2 số thập phân):", value="", placeholder="VD: 50").replace(",", ".")
     with col5:
-        LP_chuoi = st.text_input("Lạm phát dự kiến (%, tối đa 2 số thập phân):", value="4.2").replace(",", ".")
+        LP_chuoi = st.text_input("Lạm phát dự kiến (%, tối đa 2 số thập phân):", value="", placeholder="VD: 4.2").replace(",", ".")
         
 elif Chon == 2:
-    FV_chuoi = st.text_input("Tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="500").replace(",", ".")
+    FV_chuoi = st.text_input("Tổng mục tiêu muốn có (triệu đồng, tối đa 2 số thập phân) :red[*] :", value="", placeholder="VD: 500").replace(",", ".")
 
 # --- 3. NÚT THỰC THI & XỬ LÝ LOGIC ---
 if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="primary"):
-    # Đã sửa thành bóng bay theo yêu cầu
     st.balloons()
     
     # --- BỘ LỌC LỖI CHUNG ---
@@ -140,9 +139,9 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         st.subheader("📊 BÁO CÁO KẾT QUẢ")
         m1, m2, m3 = st.columns(3)
-        m1.metric(label="Tổng vốn đã gửi", value=f"{TongGoc:,.2f} Tr")
-        m2.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Tr")
-        m3.metric(label="Tổng tài sản tương lai", value=f"{FV:,.2f} Tr")
+        m1.metric(label="Tổng vốn đã gửi", value=f"{TongGoc:,.2f} Triệu đồng")
+        m2.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Triệu đồng")
+        m3.metric(label="Tổng tài sản tương lai", value=f"{FV:,.2f} Triệu đồng")
         
         if LP > 0:
             st.info(f"💡 **Sức mua thực tế** (sau khi khấu trừ {LP}% lạm phát/năm): **{Suc_mua_thuc_te:,.2f} triệu đồng**")
@@ -168,7 +167,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- TÍNH TOÁN OPTION 2 ---
     elif Chon == 2:
         if FV_chuoi == "":
-            st.error("LỖI: Vui lòng nhập số tiền mục tiêu mong muốn!")
+            st.error("LỖI: Cần nhập số tiền mục tiêu mong muốn")
             st.stop()
         if "." in FV_chuoi and len(FV_chuoi.split(".")[1]) > 2:
             st.error("LỖI: Tổng mục tiêu muốn có chỉ nhập tối đa 2 số thập phân")
@@ -181,9 +180,9 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         st.subheader("📊 BÁO CÁO KẾT QUẢ")
         m1, m2, m3 = st.columns(3)
-        m1.metric(label="Mỗi tháng cần gửi", value=f"{C:,.2f} Tr")
-        m2.metric(label="Tổng vốn bỏ ra", value=f"{TongGoc:,.2f} Tr")
-        m3.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Tr")
+        m1.metric(label="Mỗi tháng cần gửi", value=f"{C:,.2f} Triệu đồng")
+        m2.metric(label="Tổng vốn bỏ ra", value=f"{TongGoc:,.2f} Triệu đồng")
+        m3.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Triệu đồng")
 
         so_nam_tron = int(SN)
         for nam in range(1, so_nam_tron + 1):
@@ -212,32 +211,26 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
             fig1, ax1 = plt.subplots(figsize=(8, 5))
             
-            # Vẽ cột gốc và lãi
             bars_goc = ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
             bars_lai = ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
             
-            # Cập nhật hiển thị số liệu lên cột
             for bar_g, bar_l in zip(bars_goc, bars_lai):
                 h_goc = bar_g.get_height()
                 h_lai = bar_l.get_height()
                 x_pos = bar_g.get_x() + bar_g.get_width() / 2
                 
-                # In số Tiền gốc (giữa cột xanh)
                 if h_goc > 0:
                     ax1.text(x_pos, h_goc / 2, f'{h_goc:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
                 
-                # In số Tiền lãi (giữa cột cam)
                 if h_lai > 0:
                     ax1.text(x_pos, h_goc + h_lai / 2, f'{h_lai:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
                 
-                # In Tổng tài sản (trên đỉnh cột)
                 ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
             
             ax1.spines['top'].set_visible(False)
             ax1.spines['right'].set_visible(False)
             ax1.set_ylabel('Triệu đồng', fontsize=11, color='#666666')
             ax1.grid(axis='y', linestyle='--', alpha=0.4)
-            # Di chuyển ghi chú (legend) ra góc trên bên trái cho đỡ che đồ thị
             ax1.legend(loc='upper left')
             st.pyplot(fig1)
             
@@ -259,14 +252,13 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         df = pd.DataFrame({
             "Thời gian": danh_sach_nam,
-            "Tổng vốn (Tr)": [round(x, 2) for x in danh_sach_goc],
-            "Tiền lãi (Tr)": [round(x, 2) for x in danh_sach_lai],
-            "Tổng tài sản (Tr)": [round(x, 2) for x in danh_sach_tien]
+            "Tổng vốn (Triệu đồng)": [round(x, 2) for x in danh_sach_goc],
+            "Tiền lãi (Triệu đồng)": [round(x, 2) for x in danh_sach_lai],
+            "Tổng tài sản (Triệu đồng)": [round(x, 2) for x in danh_sach_tien]
         })
         
         st.dataframe(df, use_container_width=True)
         
-        # Đã thêm sep=';' để Excel chia cột tự động theo chuẩn máy tính Việt Nam
         csv = df.to_csv(index=False, sep=';').encode('utf-8-sig')
         st.download_button(
             label="📥 Tải Báo Cáo Xuống (Mở bằng Excel)",
