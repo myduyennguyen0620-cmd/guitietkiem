@@ -43,6 +43,7 @@ div[data-baseweb="input"] > div {
     font-size: 15px;
     line-height: 1.6;
     color: #333;
+    padding-top: 10px;
 }
 </style>
 """
@@ -189,8 +190,11 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- 4. RENDER GIAO DIỆN PHÂN TÍCH ---
     if len(danh_sach_nam) > 0:
         
-        # --- HÀNG 1: ĐỒ THỊ CỘT ---
-        st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
+        # ---> ĐÃ SỬA: Gom dòng hướng dẫn rê chuột gộp chung vào tiêu đề để không sinh ra ô rỗng <---
+        st.markdown("""
+        ### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN
+        *(💡 Hướng dẫn: Rê chuột (trên PC) hoặc Chạm (trên Điện thoại) vào từng cột để xem chi tiết)*
+        """)
         
         fig1 = go.Figure(data=[
             go.Bar(name='Tổng vốn', x=danh_sach_nam, y=danh_sach_goc, marker_color='#4CAF50',
@@ -210,10 +214,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         )
         st.plotly_chart(fig1, use_container_width=True)
         
-        # Thêm dòng chú thích tương tác mượt mà
-        st.caption("*Cách xem thông số trên cột: Rê chuột (trên PC) hoặc Chạm (trên Điện thoại) vào từng cột để xem chi tiết dữ liệu*")
-        st.markdown("<br>", unsafe_allow_html=True) 
-        
         # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH) ---
         col_pie, col_text = st.columns([1, 1.2]) 
         
@@ -221,7 +221,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         ty_le_lai = (TienLai / FV) * 100
         ty_le_goc = 100 - ty_le_lai
 
-        # ---> XÂY DỰNG LOGIC NHẬN ĐỊNH ĐỘNG DỰA TRÊN TÂM LÝ HÀNH VI <---
         if SN < 5:
             loi_khuyen = "Trong ngắn hạn, thách thức lớn nhất là vượt qua <b>'Thiên kiến hiện tại' (Present Bias)</b> – tâm lý thích chi tiêu ngay lập tức. Hãy giữ vững kỷ luật!"
         elif SN <= 10:
@@ -247,21 +246,21 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
             )])
             
-            # ---> FIX LỖI: Ép chiều cao biểu đồ tròn xuống 320px để cân bằng với hộp chữ bên phải <---
+            # ---> Tinh chỉnh height=300 và margin để vừa khít tuyệt đối với hộp text <---
             fig2.update_layout(
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 showlegend=False,
-                margin=dict(t=0, b=0, l=0, r=0),
-                height=320 
+                margin=dict(t=20, b=20, l=0, r=0),
+                height=300 
             )
             st.plotly_chart(fig2, use_container_width=True)
             
         with col_text:
-            st.markdown("### 💡 NHẬN ĐỊNH TÀI CHÍNH")
-            
+            # ---> ĐÃ SỬA: Gộp chung Tiêu đề và Nội dung vào 1 lệnh st.markdown duy nhất để tạo thành 1 khối hộp đồng nhất <---
             if Chon == 1:
                 st.markdown(f"""
+                ### 💡 NHẬN ĐỊNH TÀI CHÍNH
                 <div class='nhan-dinh'>
                     <b>1. Tổng kết thành quả:</b> Sau {nam_hien_thi} năm, bạn sẽ tích lũy được <b>{FV:,.2f} Triệu đồng</b>.<br><br>
                     <b>2. Hiệu suất đầu tư:</b> Tiền lãi sinh ra chiếm <b>{ty_le_lai:.1f}%</b>. {nhan_xet_lai}<br><br>
@@ -270,6 +269,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 """, unsafe_allow_html=True)
             elif Chon == 2:
                 st.markdown(f"""
+                ### 💡 NHẬN ĐỊNH TÀI CHÍNH
                 <div class='nhan-dinh'>
                     <b>1. Tính khả thi:</b> Để đạt mục tiêu <b>{FV:,.2f} Triệu đồng</b>, kỷ luật gửi <b>{C:,.2f} Tr/tháng</b> là chìa khóa then chốt.<br><br>
                     <b>2. Đòn bẩy tài chính:</b> Bạn thực chất chỉ bỏ ra <b>{ty_le_goc:.1f}%</b> công sức (tiền gốc). {nhan_xet_lai}<br><br>
@@ -277,9 +277,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 </div>
                 """, unsafe_allow_html=True)
 
-        # Xoá bớt các thẻ <br> dư thừa gây ra khoảng trắng trống không cần thiết
-        st.markdown("<br>", unsafe_allow_html=True)
-        
         # --- HÀNG 3: BẢNG DÒNG TIỀN ---
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
