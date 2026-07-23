@@ -212,6 +212,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         # Thêm dòng chú thích tương tác mượt mà
         st.caption("*Cách xem thông số trên cột: Rê chuột (trên PC) hoặc Chạm (trên Điện thoại) vào từng cột để xem chi tiết dữ liệu*")
+        st.markdown("<br>", unsafe_allow_html=True) 
         
         # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH) ---
         col_pie, col_text = st.columns([1, 1.2]) 
@@ -246,11 +247,13 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
             )])
             
+            # ---> FIX LỖI: Ép chiều cao biểu đồ tròn xuống 320px để cân bằng với hộp chữ bên phải <---
             fig2.update_layout(
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 showlegend=False,
-                margin=dict(t=0, b=0, l=0, r=0)
+                margin=dict(t=0, b=0, l=0, r=0),
+                height=320 
             )
             st.plotly_chart(fig2, use_container_width=True)
             
@@ -274,9 +277,10 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 </div>
                 """, unsafe_allow_html=True)
 
+        # Xoá bớt các thẻ <br> dư thừa gây ra khoảng trắng trống không cần thiết
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # --- HÀNG 3: BẢNG DÒNG TIỀN (Đã bỏ hộp chướng mắt st.markdown("---")) ---
+        # --- HÀNG 3: BẢNG DÒNG TIỀN ---
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
         df = pd.DataFrame({
