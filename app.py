@@ -1,6 +1,6 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.graph_objects as go 
 
 # --- 1. CẤU HÌNH GIAO DIỆN TRANG WEB ---
 st.set_page_config(page_title="Kế Hoạch Tiết Kiệm", page_icon="💰", layout="centered")
@@ -11,25 +11,21 @@ page_bg_img = """
 .stMarkdown:has(style) {
     display: none !important;
 }
-
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
-
 [data-testid="stHeader"] {
     background: rgba(0,0,0,0);
 }
-
 div[data-baseweb="input"] > div {
     background-color: rgba(255, 255, 255, 0.4) !important;
     border: none !important;
     border-radius: 10px !important;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-
 .stMarkdown, .stText, .stMetric, .stDataFrame {
     background-color: rgba(255, 255, 255, 0.3) !important;
     backdrop-filter: blur(10px);
@@ -39,7 +35,6 @@ div[data-baseweb="input"] > div {
     padding: 15px;
     box-shadow: 0 8px 15px rgba(0,0,0,0.05);
 }
-
 [data-testid="stMetricValue"] {
     color: #1f77b4 !important;
     font-weight: bold;
@@ -83,7 +78,6 @@ elif Chon == 2:
 if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="primary"):
     st.balloons()
     
-    # --- BỘ LỌC LỖI CHUNG ---
     if LSN_chuoi == "" or SN_chuoi == "":
         st.error("LỖI: Cần nhập đầy đủ Lãi suất và Thời gian")
         st.stop()
@@ -106,7 +100,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     danh_sach_lai = []
     danh_sach_tien = []
 
-    # --- TÍNH TOÁN OPTION 1 ---
     if Chon == 1:
         if C_chuoi == "":
             st.error("LỖI: Cần nhập số tiền gửi mỗi tháng")
@@ -116,21 +109,8 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.stop()
         C = float(C_chuoi)
 
-        if PV_chuoi != "":
-            if "." in PV_chuoi and len(PV_chuoi.split(".")[1]) > 2:
-                st.error("LỖI: Vốn sẵn có chỉ nhập tối đa 2 số thập phân")
-                st.stop()
-            PV = float(PV_chuoi)
-        else:
-            PV = 0.0
-
-        if LP_chuoi != "":
-            if "." in LP_chuoi and len(LP_chuoi.split(".")[1]) > 2:
-                st.error("LỖI: Lạm phát dự kiến chỉ nhập tối đa 2 số thập phân")
-                st.stop()
-            LP = float(LP_chuoi)
-        else:
-            LP = 0.0
+        PV = float(PV_chuoi) if PV_chuoi != "" else 0.0
+        LP = float(LP_chuoi) if LP_chuoi != "" else 0.0
 
         FV = (PV * ((1 + r)**n)) + (C * (((1 + r)**n - 1) / r))
         TongGoc = PV + (C * n)
@@ -164,7 +144,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             danh_sach_lai.append(TienLai)
             danh_sach_tien.append(FV)
             
-    # --- TÍNH TOÁN OPTION 2 ---
     elif Chon == 2:
         if FV_chuoi == "":
             st.error("LỖI: Cần nhập số tiền mục tiêu mong muốn")
@@ -202,64 +181,54 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             danh_sach_lai.append(TienLai)
             danh_sach_tien.append(FV)
 
-    # --- 4. RENDER GIAO DIỆN PHÂN TÍCH (ĐỒ THỊ & BẢNG) ---
+    # --- 4. RENDER GIAO DIỆN PHÂN TÍCH (PLOTLY INTERACTIVE) ---
     if len(danh_sach_nam) > 0:
         
         col_chart1, col_chart2 = st.columns([1.7, 1.3])
         
         with col_chart1:
             st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
-            fig1, ax1 = plt.subplots(figsize=(8, 5))
             
-            bars_goc = ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
-            bars_lai = ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
+            fig1 = go.Figure(data=[
+                go.Bar(name='Tổng vốn', x=danh_sach_nam, y=danh_sach_goc, marker_color='#4CAF50',
+                       hovertemplate='<b>%{x}</b><br>Tổng vốn: %{y:,.2f} Tr<extra></extra>'),
+                go.Bar(name='Tiền lãi', x=danh_sach_nam, y=danh_sach_lai, marker_color='#FF9800',
+                       hovertemplate='<b>%{x}</b><br>Tiền lãi: %{y:,.2f} Tr<extra></extra>')
+            ])
             
-            # ---> TÍNH NĂNG UX THÔNG MINH CHO CỘT ĐỒ THỊ <---
-            so_cot = len(danh_sach_nam)
-            
-            for i, (bar_g, bar_l) in enumerate(zip(bars_goc, bars_lai)):
-                h_goc = bar_g.get_height()
-                h_lai = bar_l.get_height()
-                x_pos = bar_g.get_x() + bar_g.get_width() / 2
-                
-                if so_cot <= 10:
-                    # Chế độ < 10 năm: Không gian thoáng, in đủ số
-                    if h_goc > 0:
-                        ax1.text(x_pos, h_goc / 2, f'{h_goc:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
-                    if h_lai > 0:
-                        ax1.text(x_pos, h_goc + h_lai / 2, f'{h_lai:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
-                    
-                    ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
-                else:
-                    # Chế độ > 10 năm: Ẩn số bên trong cột, chỉ hiện Tổng của năm CUỐI CÙNG
-                    if i == so_cot - 1:
-                        ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
-            
-            # Nghiêng chữ dưới trục ngang nếu quá nhiều năm để chống đụng nhau
-            if so_cot > 10:
-                plt.xticks(rotation=45, ha='right')
-
-            ax1.spines['top'].set_visible(False)
-            ax1.spines['right'].set_visible(False)
-            ax1.set_ylabel('Triệu đồng', fontsize=11, color='#666666')
-            ax1.grid(axis='y', linestyle='--', alpha=0.4)
-            ax1.legend(loc='upper left')
-            st.pyplot(fig1)
+            fig1.update_layout(
+                barmode='stack',
+                hovermode='x unified',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(l=0, r=0, t=30, b=0),
+                yaxis=dict(title='Triệu đồng', gridcolor='rgba(200, 200, 200, 0.2)')
+            )
+            st.plotly_chart(fig1, use_container_width=True)
             
         with col_chart2:
             nam_hien_thi = int(SN) if SN == int(SN) else SN
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*(Tỷ lệ % sau {nam_hien_thi} năm)*")
             
-            fig2, ax2 = plt.subplots(figsize=(5, 5))
+            # ---> FIX LỖI LỆCH TÂM: Đưa text vào trong, reset margin <---
+            fig2 = go.Figure(data=[go.Pie(
+                labels=['Tổng vốn', 'Tiền lãi'],
+                values=[TongGoc, TienLai],
+                marker=dict(colors=['#4CAF50', '#FF9800']),
+                textinfo='label+percent',
+                textposition='inside', # Ép chữ chui vào trong bánh
+                textfont=dict(size=13, color='white', family="Arial Black"),
+                hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
+            )])
             
-            labels = ['Tổng vốn', 'Tiền lãi']
-            sizes = [TongGoc, TienLai]
-            colors = ['#4CAF50', '#FF9800']
-            
-            ax2.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
-                    shadow=True, startangle=90, textprops={'fontsize': 12, 'weight': 'bold'})
-            ax2.axis('equal') 
-            st.pyplot(fig2)
+            fig2.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                showlegend=False,
+                margin=dict(t=0, b=0, l=0, r=0) # Reset lề để bánh căng đều ra giữa
+            )
+            st.plotly_chart(fig2, use_container_width=True)
 
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
