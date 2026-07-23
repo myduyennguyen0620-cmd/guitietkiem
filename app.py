@@ -235,9 +235,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.pyplot(fig1)
             
         with col_chart2:
-            # ---> BÀ NHÌN CHỖ NÀY NHA, ĐÃ ĐỔI TIÊU ĐỀ LÀM RÕ NĂM CUỐI <---
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN (SAU {SN} NĂM)")
-            st.caption("*(Tỷ lệ % giữa Tổng vốn và Tiền lãi ở cuối kỳ)*") # Thêm dòng chú thích siêu nhỏ, siêu tinh tế
             
             fig2, ax2 = plt.subplots(figsize=(5, 5))
             
