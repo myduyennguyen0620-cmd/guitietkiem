@@ -211,7 +211,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         st.plotly_chart(fig1, use_container_width=True)
         
         # Thêm dòng chú thích tương tác mượt mà
-        st.caption("*(Hướng dẫn xem thông số trong biểu đồ cột: Rê chuột (trên PC) hoặc Chạm (trên Điện thoại) vào từng cột để xem chi tiết dữ liệu)*")
+        st.caption("*Cách xem thông số trên cột: Rê chuột (trên PC) hoặc Chạm (trên Điện thoại) vào từng cột để xem chi tiết dữ liệu*")
         
         # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH) ---
         col_pie, col_text = st.columns([1, 1.2]) 
