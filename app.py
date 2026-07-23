@@ -205,7 +205,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- 4. RENDER GIAO DIỆN PHÂN TÍCH (ĐỒ THỊ & BẢNG) ---
     if len(danh_sach_nam) > 0:
         
-        # ĐÃ SỬA: Điều chỉnh lại tỷ lệ cột cho rộng rãi hơn (1.7 và 1.3 thay vì 2 và 1)
         col_chart1, col_chart2 = st.columns([1.7, 1.3])
         
         with col_chart1:
@@ -215,18 +214,25 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             bars_goc = ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
             bars_lai = ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
             
+            # ---> TÍNH NGƯỠNG HIỂN THỊ ĐỂ GIẤU CHỮ BỊ TRÀN VIỀN <---
+            max_y = max(danh_sach_tien)
+            nguong_hien_thi = max_y * 0.04  # Cột phải cao hơn 4% tổng mới hiện chữ
+            
             for bar_g, bar_l in zip(bars_goc, bars_lai):
                 h_goc = bar_g.get_height()
                 h_lai = bar_l.get_height()
                 x_pos = bar_g.get_x() + bar_g.get_width() / 2
                 
-                if h_goc > 0:
+                # Bắt điều kiện: Chỉ in số GỐC nếu chiều cao lớn hơn ngưỡng
+                if h_goc > nguong_hien_thi:
                     ax1.text(x_pos, h_goc / 2, f'{h_goc:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
                 
-                if h_lai > 0:
+                # Bắt điều kiện: Chỉ in số LÃI nếu chiều cao lớn hơn ngưỡng
+                if h_lai > nguong_hien_thi:
                     ax1.text(x_pos, h_goc + h_lai / 2, f'{h_lai:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
                 
-                ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
+                # Tổng tài sản trên đỉnh cột thì luôn luôn in
+                ax1.text(x_pos, h_goc + h_lai + (max_y * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
             
             ax1.spines['top'].set_visible(False)
             ax1.spines['right'].set_visible(False)
@@ -237,8 +243,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             
         with col_chart2:
             nam_hien_thi = int(SN) if SN == int(SN) else SN
-            
-            # ĐÃ SỬA: Gộp chung Tiêu đề và Caption vào 1 ô markdown duy nhất
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*(Tỷ lệ % sau {nam_hien_thi} năm)*")
             
             fig2, ax2 = plt.subplots(figsize=(5, 5))
