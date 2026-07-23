@@ -235,7 +235,10 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.pyplot(fig1)
             
         with col_chart2:
-            st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN (SAU {SN} NĂM)")
+            # ---> ĐÃ SỬA LẠI BỐ CỤC CHỖ NÀY CHO CÂN ĐỐI <---
+            nam_hien_thi = int(SN) if SN == int(SN) else SN
+            st.markdown("### 🥧 CƠ CẤU TÀI SẢN")
+            st.caption(f"*(Tỷ lệ % sau {nam_hien_thi} năm)*")
             
             fig2, ax2 = plt.subplots(figsize=(5, 5))
             
