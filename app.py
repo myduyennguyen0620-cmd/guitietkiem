@@ -214,20 +214,31 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             bars_goc = ax1.bar(danh_sach_nam, danh_sach_goc, label='Tổng vốn', color='#4CAF50', alpha=0.85)
             bars_lai = ax1.bar(danh_sach_nam, danh_sach_lai, bottom=danh_sach_goc, label='Tiền lãi', color='#FF9800', alpha=0.85)
             
-            # ---> TRẢ VỀ NHƯ CŨ: Hiển thị toàn bộ số liệu cho đồng bộ <---
-            for bar_g, bar_l in zip(bars_goc, bars_lai):
+            # ---> TÍNH NĂNG UX THÔNG MINH CHO CỘT ĐỒ THỊ <---
+            so_cot = len(danh_sach_nam)
+            
+            for i, (bar_g, bar_l) in enumerate(zip(bars_goc, bars_lai)):
                 h_goc = bar_g.get_height()
                 h_lai = bar_l.get_height()
                 x_pos = bar_g.get_x() + bar_g.get_width() / 2
                 
-                if h_goc > 0:
-                    ax1.text(x_pos, h_goc / 2, f'{h_goc:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
-                
-                if h_lai > 0:
-                    ax1.text(x_pos, h_goc + h_lai / 2, f'{h_lai:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
-                
-                ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
+                if so_cot <= 10:
+                    # Chế độ < 10 năm: Không gian thoáng, in đủ số
+                    if h_goc > 0:
+                        ax1.text(x_pos, h_goc / 2, f'{h_goc:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
+                    if h_lai > 0:
+                        ax1.text(x_pos, h_goc + h_lai / 2, f'{h_lai:,.1f}', ha='center', va='center', color='white', fontsize=9, fontweight='bold')
+                    
+                    ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
+                else:
+                    # Chế độ > 10 năm: Ẩn số bên trong cột, chỉ hiện Tổng của năm CUỐI CÙNG
+                    if i == so_cot - 1:
+                        ax1.text(x_pos, h_goc + h_lai + (max(danh_sach_tien) * 0.02), f'{(h_goc + h_lai):,.1f}', ha='center', va='bottom', color='#333333', fontsize=10, fontweight='bold')
             
+            # Nghiêng chữ dưới trục ngang nếu quá nhiều năm để chống đụng nhau
+            if so_cot > 10:
+                plt.xticks(rotation=45, ha='right')
+
             ax1.spines['top'].set_visible(False)
             ax1.spines['right'].set_visible(False)
             ax1.set_ylabel('Triệu đồng', fontsize=11, color='#666666')
@@ -245,7 +256,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             sizes = [TongGoc, TienLai]
             colors = ['#4CAF50', '#FF9800']
             
-            # ---> ĐÃ SỬA: Xóa cái explode để hình tròn vo, không bị lệch khung <---
             ax2.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
                     shadow=True, startangle=90, textprops={'fontsize': 12, 'weight': 'bold'})
             ax2.axis('equal') 
