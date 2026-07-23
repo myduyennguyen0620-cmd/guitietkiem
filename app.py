@@ -205,7 +205,8 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- 4. RENDER GIAO DIỆN PHÂN TÍCH (ĐỒ THỊ & BẢNG) ---
     if len(danh_sach_nam) > 0:
         
-        col_chart1, col_chart2 = st.columns([2, 1])
+        # ĐÃ SỬA: Điều chỉnh lại tỷ lệ cột cho rộng rãi hơn (1.7 và 1.3 thay vì 2 và 1)
+        col_chart1, col_chart2 = st.columns([1.7, 1.3])
         
         with col_chart1:
             st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
@@ -235,10 +236,10 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             st.pyplot(fig1)
             
         with col_chart2:
-            # ---> ĐÃ SỬA LẠI BỐ CỤC CHỖ NÀY CHO CÂN ĐỐI <---
             nam_hien_thi = int(SN) if SN == int(SN) else SN
-            st.markdown("### 🥧 CƠ CẤU TÀI SẢN")
-            st.caption(f"*(Tỷ lệ % sau {nam_hien_thi} năm)*")
+            
+            # ĐÃ SỬA: Gộp chung Tiêu đề và Caption vào 1 ô markdown duy nhất
+            st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*(Tỷ lệ % sau {nam_hien_thi} năm)*")
             
             fig2, ax2 = plt.subplots(figsize=(5, 5))
             
