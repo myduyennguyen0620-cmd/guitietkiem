@@ -63,6 +63,17 @@ div[data-baseweb="input"] > div {
 st.markdown(page_bg_img, unsafe_allow_html=True)
 # ---------------------------------------------------------
 st.title("💰 Ứng Dụng Tính Toán Tiền Gửi Tiết Kiệm")
+.footer-tag {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    font-family: monospace;
+    letter-spacing: 0.5px;
+    z-index: 999;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
 
 # --- 2. MENU LỰA CHỌN TÍNH NĂNG ---
 chon_chuoi = st.radio(
