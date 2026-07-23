@@ -139,9 +139,10 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         st.subheader("📊 BÁO CÁO KẾT QUẢ")
         m1, m2, m3 = st.columns(3)
-        m1.metric(label="Tổng vốn đã gửi", value=f"{TongGoc:,.2f} Triệu đồng")
-        m2.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Triệu đồng")
-        m3.metric(label="Tổng tài sản tương lai", value=f"{FV:,.2f} Triệu đồng")
+        # TRẢ VỀ CHỮ "Tr" CHO GỌN GÀNG GIAO DIỆN
+        m1.metric(label="Tổng vốn đã gửi", value=f"{TongGoc:,.2f} Tr")
+        m2.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Tr")
+        m3.metric(label="Tổng tài sản tương lai", value=f"{FV:,.2f} Tr")
         
         if LP > 0:
             st.info(f"💡 **Sức mua thực tế** (sau khi khấu trừ {LP}% lạm phát/năm): **{Suc_mua_thuc_te:,.2f} triệu đồng**")
@@ -180,9 +181,10 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         st.subheader("📊 BÁO CÁO KẾT QUẢ")
         m1, m2, m3 = st.columns(3)
-        m1.metric(label="Mỗi tháng cần gửi", value=f"{C:,.2f} Triệu đồng")
-        m2.metric(label="Tổng vốn bỏ ra", value=f"{TongGoc:,.2f} Triệu đồng")
-        m3.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Triệu đồng")
+        # TRẢ VỀ CHỮ "Tr" CHO GỌN GÀNG GIAO DIỆN
+        m1.metric(label="Mỗi tháng cần gửi", value=f"{C:,.2f} Tr")
+        m2.metric(label="Tổng vốn bỏ ra", value=f"{TongGoc:,.2f} Tr")
+        m3.metric(label="Tiền lãi sinh ra", value=f"{TienLai:,.2f} Tr")
 
         so_nam_tron = int(SN)
         for nam in range(1, so_nam_tron + 1):
@@ -250,6 +252,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
 
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
+        # BẢNG VÀ EXCEL VẪN GIỮ NGUYÊN "Triệu đồng" CHO CHUẨN CHỈNH
         df = pd.DataFrame({
             "Thời gian": danh_sach_nam,
             "Tổng vốn (Triệu đồng)": [round(x, 2) for x in danh_sach_goc],
