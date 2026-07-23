@@ -58,6 +58,18 @@ div[data-baseweb="input"] > div {
     line-height: 1.5;
     color: #333;
 }
+* ---> DÁN PHẦN CSS FOOTER VÀO ĐÂY <--- *
+.footer-tag {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    font-family: monospace;
+    letter-spacing: 0.5px;
+    z-index: 999;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
