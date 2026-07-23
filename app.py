@@ -315,3 +315,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             mime="text/csv",
             type="primary"
         )
+
+# --- 5. FOOTER TÁC GIẢ ---
+st.markdown("<div class='footer-tag'>@novafin_ufm_cntc_2026</div>", unsafe_allow_html=True)
