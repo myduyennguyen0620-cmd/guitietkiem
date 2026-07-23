@@ -26,7 +26,6 @@ div[data-baseweb="input"] > div {
     border-radius: 10px !important;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-/* CHỈ ĐÓNG KHUNG CÁC THÔNG SỐ VÀ BẢNG (Đã gỡ bỏ viền của Tiêu đề) */
 .stMetric, .stDataFrame {
     background-color: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(10px);
@@ -40,7 +39,7 @@ div[data-baseweb="input"] > div {
     color: #1f77b4 !important;
     font-weight: bold;
 }
-/* KHUNG CARD CHO PHẦN NHẬN ĐỊNH - KHÓA CỨNG 320PX ĐỂ BẰNG BIỂU ĐỒ TRÒN */
+/* ĐỒNG BỘ CHIỀU CAO TUYỆT ĐỐI CHO CẢ 2 BÊN */
 .nhan-dinh-card {
     background-color: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(10px);
@@ -49,14 +48,14 @@ div[data-baseweb="input"] > div {
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-    height: 320px; 
+    height: 290px; 
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 .nhan-dinh-text {
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 14.5px;
+    line-height: 1.5;
     color: #333;
 }
 </style>
@@ -206,7 +205,6 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         
         # --- HÀNG 1: ĐỒ THỊ CỘT ---
         st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
-        # ĐÃ SỬA: Xóa hoàn toàn ngoặc tròn, câu văn gọn gàng
         st.markdown("*💡 Hướng dẫn: Rê chuột trên PC hoặc Chạm trên điện thoại vào từng cột để xem chi tiết*")
         
         fig1 = go.Figure(data=[
@@ -244,12 +242,11 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             loi_khuyen = "Thời gian là đòn bẩy vĩ đại nhất! Kỷ luật xuyên suốt sẽ giúp bạn chiến thắng mọi biến động của thị trường."
             
         if ty_le_lai >= 50:
-            nhan_xet_lai = "Tiền lãi đã vượt mốc 50% tổng tài sản! Đây chính là đỉnh cao của việc 'để tiền đẻ ra tiền'."
+            nhan_xet_lai = "Tiền lãi đã vượt mốc 50% tổng tài sản! Đây chính là đỉnh cao của việc 'de tiền đẻ ra tiền'."
         else:
             nhan_xet_lai = "Dòng tiền của bạn đang hoạt động sinh lời rất ổn định và an toàn."
 
         with col_pie:
-            # ĐÃ SỬA: Tách Tiêu đề ra khỏi biểu đồ, xóa ngoặc tròn luôn
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*Tỷ lệ % sau {nam_hien_thi} năm*")
             
             fig2 = go.Figure(data=[go.Pie(
@@ -262,22 +259,20 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
             )])
             
-            # Khóa cứng chiều cao 320px
+            # GIẢM CHIỀU CAO XUỐNG 270 ĐỂ CÂN BẰNG HOÀN HẢO
             fig2.update_layout(
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 showlegend=False,
-                margin=dict(t=0, b=0, l=0, r=0),
-                height=320 
+                margin=dict(t=10, b=10, l=0, r=0),
+                height=270 
             )
             st.plotly_chart(fig2, use_container_width=True)
             
         with col_text:
-            # ĐÃ SỬA: Tiêu đề độc lập nằm ngoài hộp kính để ngang hàng với bên trái
             st.markdown("### 💡 NHẬN ĐỊNH TÀI CHÍNH")
             
             if Chon == 1:
-                # Đóng gói nguyên nội dung vào class nhan-dinh-card cao đúng 320px
                 st.markdown(f"""
                 <div class='nhan-dinh-card'>
                     <div class='nhan-dinh-text'>
