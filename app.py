@@ -39,6 +39,12 @@ div[data-baseweb="input"] > div {
     color: #1f77b4 !important;
     font-weight: bold;
 }
+/* Tuỳ chỉnh font cho phần nhận định */
+.nhan-dinh {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
@@ -181,43 +187,49 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             danh_sach_lai.append(TienLai)
             danh_sach_tien.append(FV)
 
-    # --- 4. RENDER GIAO DIỆN PHÂN TÍCH (PLOTLY INTERACTIVE) ---
+    # --- 4. RENDER GIAO DIỆN PHÂN TÍCH ---
     if len(danh_sach_nam) > 0:
         
-        col_chart1, col_chart2 = st.columns([1.7, 1.3])
+        # --- HÀNG 1: ĐỒ THỊ CỘT FULL MÀN HÌNH ---
+        st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
         
-        with col_chart1:
-            st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
-            
-            fig1 = go.Figure(data=[
-                go.Bar(name='Tổng vốn', x=danh_sach_nam, y=danh_sach_goc, marker_color='#4CAF50',
-                       hovertemplate='<b>%{x}</b><br>Tổng vốn: %{y:,.2f} Tr<extra></extra>'),
-                go.Bar(name='Tiền lãi', x=danh_sach_nam, y=danh_sach_lai, marker_color='#FF9800',
-                       hovertemplate='<b>%{x}</b><br>Tiền lãi: %{y:,.2f} Tr<extra></extra>')
-            ])
-            
-            fig1.update_layout(
-                barmode='stack',
-                hovermode='x unified',
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-                margin=dict(l=0, r=0, t=30, b=0),
-                yaxis=dict(title='Triệu đồng', gridcolor='rgba(200, 200, 200, 0.2)')
-            )
-            st.plotly_chart(fig1, use_container_width=True)
-            
-        with col_chart2:
-            nam_hien_thi = int(SN) if SN == int(SN) else SN
+        fig1 = go.Figure(data=[
+            go.Bar(name='Tổng vốn', x=danh_sach_nam, y=danh_sach_goc, marker_color='#4CAF50',
+                   hovertemplate='<b>%{x}</b><br>Tổng vốn: %{y:,.2f} Tr<extra></extra>'),
+            go.Bar(name='Tiền lãi', x=danh_sach_nam, y=danh_sach_lai, marker_color='#FF9800',
+                   hovertemplate='<b>%{x}</b><br>Tiền lãi: %{y:,.2f} Tr<extra></extra>')
+        ])
+        
+        fig1.update_layout(
+            barmode='stack',
+            hovermode='x unified',
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            margin=dict(l=0, r=0, t=30, b=0),
+            yaxis=dict(title='Triệu đồng', gridcolor='rgba(200, 200, 200, 0.2)')
+        )
+        # Bật full width cho cột
+        st.plotly_chart(fig1, use_container_width=True)
+        
+        st.markdown("<br>", unsafe_allow_html=True) # Tạo khoảng trắng cho dễ nhìn
+        
+        # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH TÀI CHÍNH) ---
+        col_pie, col_text = st.columns([1, 1.2]) # Bên text nhỉnh hơn một chút cho rộng rãi
+        
+        nam_hien_thi = int(SN) if SN == int(SN) else SN
+        ty_le_lai = (TienLai / FV) * 100
+        ty_le_goc = 100 - ty_le_lai
+
+        with col_pie:
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*(Tỷ lệ % sau {nam_hien_thi} năm)*")
             
-            # ---> FIX LỖI LỆCH TÂM: Đưa text vào trong, reset margin <---
             fig2 = go.Figure(data=[go.Pie(
                 labels=['Tổng vốn', 'Tiền lãi'],
                 values=[TongGoc, TienLai],
                 marker=dict(colors=['#4CAF50', '#FF9800']),
                 textinfo='label+percent',
-                textposition='inside', # Ép chữ chui vào trong bánh
+                textposition='inside',
                 textfont=dict(size=13, color='white', family="Arial Black"),
                 hovertemplate='%{label}: %{value:,.2f} Tr<extra></extra>'
             )])
@@ -226,10 +238,36 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 showlegend=False,
-                margin=dict(t=0, b=0, l=0, r=0) # Reset lề để bánh căng đều ra giữa
+                margin=dict(t=0, b=0, l=0, r=0)
             )
             st.plotly_chart(fig2, use_container_width=True)
+            
+        with col_text:
+            st.markdown("### 💡 NHẬN ĐỊNH TÀI CHÍNH")
+            
+            # Khung text nhận định thông minh thay đổi theo Option
+            if Chon == 1:
+                st.markdown(f"""
+                <div class='nhan-dinh'>
+                    <b>1. Tổng kết thành quả:</b> Sau {nam_hien_thi} năm kiên trì, bạn sẽ sở hữu tổng tài sản là <b>{FV:,.2f} Triệu đồng</b>.<br><br>
+                    <b>2. Sức mạnh Lãi kép:</b> Tiền lãi sinh ra chiếm tới <b>{ty_le_lai:.1f}%</b> trong cơ cấu tài sản. Dòng tiền của bạn đang hoạt động sinh lời cực kỳ hiệu quả.<br><br>
+                    <b>3. Động lực tâm lý:</b> Việc duy trì thói quen tiết kiệm đều đặn sẽ giúp bạn kiểm soát tốt các định kiến hành vi và cám dỗ chi tiêu ngắn hạn.
+                </div>
+                """, unsafe_allow_html=True)
+            elif Chon == 2:
+                st.markdown(f"""
+                <div class='nhan-dinh'>
+                    <b>1. Tính khả thi của mục tiêu:</b> Để đạt được <b>{FV:,.2f} Triệu đồng</b>, việc chia nhỏ kế hoạch và kỷ luật gửi <b>{C:,.2f} Tr/tháng</b> sẽ giúp giảm bớt áp lực tài chính đáng kể.<br><br>
+                    <b>2. Đòn bẩy thời gian:</b> Nhờ vào sức mạnh của lãi kép, bạn thực chất chỉ phải bỏ ra <b>{ty_le_goc:.1f}%</b> công sức (tiền gốc), phần còn lại là sự gia tăng tự nhiên của dòng tiền.<br><br>
+                    <b>3. Lời khuyên hành vi:</b> Bắt đầu càng sớm, số tiền phải trích lập hàng tháng sẽ càng nhẹ. Sự kỷ luật chính là chìa khóa quyết định thành công!
+                </div>
+                """, unsafe_allow_html=True)
+                
+            st.success("Tóm lại: Thời gian và sự kỷ luật là hai đòn bẩy lớn nhất trong đầu tư và tích lũy!")
 
+        st.markdown("---")
+        
+        # --- HÀNG 3: BẢNG DÒNG TIỀN ---
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
         df = pd.DataFrame({
