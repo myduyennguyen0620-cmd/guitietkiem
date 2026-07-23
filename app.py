@@ -39,9 +39,8 @@ div[data-baseweb="input"] > div {
     color: #1f77b4 !important;
     font-weight: bold;
 }
-/* Tuỳ chỉnh font cho phần nhận định */
 .nhan-dinh {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
     color: #333;
 }
@@ -190,7 +189,7 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
     # --- 4. RENDER GIAO DIỆN PHÂN TÍCH ---
     if len(danh_sach_nam) > 0:
         
-        # --- HÀNG 1: ĐỒ THỊ CỘT FULL MÀN HÌNH ---
+        # --- HÀNG 1: ĐỒ THỊ CỘT ---
         st.markdown("### 📈 ĐỒ THỊ TĂNG TRƯỞNG TÀI SẢN")
         
         fig1 = go.Figure(data=[
@@ -209,17 +208,31 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
             margin=dict(l=0, r=0, t=30, b=0),
             yaxis=dict(title='Triệu đồng', gridcolor='rgba(200, 200, 200, 0.2)')
         )
-        # Bật full width cho cột
         st.plotly_chart(fig1, use_container_width=True)
         
-        st.markdown("<br>", unsafe_allow_html=True) # Tạo khoảng trắng cho dễ nhìn
+        # Thêm dòng chú thích tương tác mượt mà
+        st.caption("*(💡 Mẹo: Rê chuột (trên PC) hoặc Chạm (trên Điện thoại) vào từng cột để xem chi tiết dữ liệu)*")
+        st.markdown("<br>", unsafe_allow_html=True) 
         
-        # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH TÀI CHÍNH) ---
-        col_pie, col_text = st.columns([1, 1.2]) # Bên text nhỉnh hơn một chút cho rộng rãi
+        # --- HÀNG 2: CHIA CỘT (BIỂU ĐỒ TRÒN & NHẬN ĐỊNH) ---
+        col_pie, col_text = st.columns([1, 1.2]) 
         
         nam_hien_thi = int(SN) if SN == int(SN) else SN
         ty_le_lai = (TienLai / FV) * 100
         ty_le_goc = 100 - ty_le_lai
+
+        # ---> XÂY DỰNG LOGIC NHẬN ĐỊNH ĐỘNG DỰA TRÊN TÂM LÝ HÀNH VI <---
+        if SN < 5:
+            loi_khuyen = "Trong ngắn hạn, thách thức lớn nhất là vượt qua <b>'Thiên kiến hiện tại' (Present Bias)</b> – tâm lý thích chi tiêu ngay lập tức. Hãy giữ vững kỷ luật!"
+        elif SN <= 10:
+            loi_khuyen = "Dòng tiền đang tích lũy tốt. Hãy kiên định, đừng để những biến động nhỏ làm bạn chệch hướng mục tiêu trung hạn."
+        else:
+            loi_khuyen = "Thời gian là đòn bẩy vĩ đại nhất! Kỷ luật xuyên suốt sẽ giúp bạn chiến thắng mọi biến động của thị trường."
+            
+        if ty_le_lai >= 50:
+            nhan_xet_lai = "Tiền lãi đã vượt mốc 50% tổng tài sản! Đây chính là đỉnh cao của việc 'để tiền đẻ ra tiền'."
+        else:
+            nhan_xet_lai = "Dòng tiền của bạn đang hoạt động sinh lời rất ổn định và an toàn."
 
         with col_pie:
             st.markdown(f"### 🥧 CƠ CẤU TÀI SẢN\n*(Tỷ lệ % sau {nam_hien_thi} năm)*")
@@ -245,29 +258,26 @@ if st.button("🚀 Bắt Đầu Tính Toán", use_container_width=True, type="pr
         with col_text:
             st.markdown("### 💡 NHẬN ĐỊNH TÀI CHÍNH")
             
-            # Khung text nhận định thông minh thay đổi theo Option
             if Chon == 1:
                 st.markdown(f"""
                 <div class='nhan-dinh'>
-                    <b>1. Tổng kết thành quả:</b> Sau {nam_hien_thi} năm kiên trì, bạn sẽ sở hữu tổng tài sản là <b>{FV:,.2f} Triệu đồng</b>.<br><br>
-                    <b>2. Sức mạnh Lãi kép:</b> Tiền lãi sinh ra chiếm tới <b>{ty_le_lai:.1f}%</b> trong cơ cấu tài sản. Dòng tiền của bạn đang hoạt động sinh lời cực kỳ hiệu quả.<br><br>
-                    <b>3. Động lực tâm lý:</b> Việc duy trì thói quen tiết kiệm đều đặn sẽ giúp bạn kiểm soát tốt các định kiến hành vi và cám dỗ chi tiêu ngắn hạn.
+                    <b>1. Tổng kết thành quả:</b> Sau {nam_hien_thi} năm, bạn sẽ tích lũy được <b>{FV:,.2f} Triệu đồng</b>.<br><br>
+                    <b>2. Hiệu suất đầu tư:</b> Tiền lãi sinh ra chiếm <b>{ty_le_lai:.1f}%</b>. {nhan_xet_lai}<br><br>
+                    <b>3. Lời khuyên hành vi:</b> {loi_khuyen}
                 </div>
                 """, unsafe_allow_html=True)
             elif Chon == 2:
                 st.markdown(f"""
                 <div class='nhan-dinh'>
-                    <b>1. Tính khả thi của mục tiêu:</b> Để đạt được <b>{FV:,.2f} Triệu đồng</b>, việc chia nhỏ kế hoạch và kỷ luật gửi <b>{C:,.2f} Tr/tháng</b> sẽ giúp giảm bớt áp lực tài chính đáng kể.<br><br>
-                    <b>2. Đòn bẩy thời gian:</b> Nhờ vào sức mạnh của lãi kép, bạn thực chất chỉ phải bỏ ra <b>{ty_le_goc:.1f}%</b> công sức (tiền gốc), phần còn lại là sự gia tăng tự nhiên của dòng tiền.<br><br>
-                    <b>3. Lời khuyên hành vi:</b> Bắt đầu càng sớm, số tiền phải trích lập hàng tháng sẽ càng nhẹ. Sự kỷ luật chính là chìa khóa quyết định thành công!
+                    <b>1. Tính khả thi:</b> Để đạt mục tiêu <b>{FV:,.2f} Triệu đồng</b>, kỷ luật gửi <b>{C:,.2f} Tr/tháng</b> là chìa khóa then chốt.<br><br>
+                    <b>2. Đòn bẩy tài chính:</b> Bạn thực chất chỉ bỏ ra <b>{ty_le_goc:.1f}%</b> công sức (tiền gốc). {nhan_xet_lai}<br><br>
+                    <b>3. Lời khuyên hành vi:</b> {loi_khuyen}
                 </div>
                 """, unsafe_allow_html=True)
-                
-            st.success("Tóm lại: Thời gian và sự kỷ luật là hai đòn bẩy lớn nhất trong đầu tư và tích lũy!")
 
-        st.markdown("---")
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        # --- HÀNG 3: BẢNG DÒNG TIỀN ---
+        # --- HÀNG 3: BẢNG DÒNG TIỀN (Đã bỏ hộp chướng mắt st.markdown("---")) ---
         st.markdown("### 📋 BẢNG CHI TIẾT DÒNG TIỀN")
         
         df = pd.DataFrame({
